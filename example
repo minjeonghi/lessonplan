@@ -1,54 +1,64 @@
-import streamlit as st
-import pandas as pd
-from datetime import datetime, timedelta
+# Lesson Plan Generator
 
-# Title of the app
-st.title("Recurring Lesson Plan Generator")
+This repository contains a Streamlit app that generates lesson plans based on recurring class schedules and specified holidays. You can input class details, select recurring days, and specify any dates to skip, and the app will generate a lesson plan accordingly.
 
-# Explanation
-st.write("이 앱은 반복되는 수업 요일과 특정 휴일을 제외한 수업 계획서를 자동으로 생성합니다.")
+## Getting Started
 
-# Input fields
-class_name = st.text_input("수업반 이름:")
-start_date = st.date_input("수업 시작 날짜:")
-end_date = st.date_input("수업 종료 날짜:")
-class_days = st.multiselect("수업 요일 선택:", ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"])
-skip_dates = st.multiselect("수업 빠지는 날짜 선택:", pd.date_range(start=start_date, end=end_date))
+### Prerequisites
 
-# Map days of the week to numbers for easy comparison
-day_map = {
-    "월요일": 0,
-    "화요일": 1,
-    "수요일": 2,
-    "목요일": 3,
-    "금요일": 4,
-    "토요일": 5,
-    "일요일": 6
-}
+- Python 3.x installed on your machine
+- Streamlit installed (`pip install streamlit`)
 
-# Generate lesson plan dates
-def generate_dates(start_date, end_date, class_days, skip_dates):
-    current_date = start_date
-    lesson_dates = []
-    
-    while current_date <= end_date:
-        if current_date.weekday() in [day_map[day] for day in class_days] and current_date not in skip_dates:
-            lesson_dates.append(current_date)
-        current_date += timedelta(days=1)
-    
-    return lesson_dates
+### Installation
 
-# Generate and display the lesson plan
-if st.button("수업 계획서 생성"):
-    if class_name and start_date and end_date and class_days:
-        lesson_dates = generate_dates(start_date, end_date, class_days, skip_dates)
-        df = pd.DataFrame(lesson_dates, columns=["수업 날짜"])
-        df["수업반"] = class_name
-        st.write(f"{class_name}의 수업 계획서")
-        st.dataframe(df)
-        
-        # Option to download as CSV
-        csv = df.to_csv(index=False).encode('utf-8')
-        st.download_button(label="수업 계획서 다운로드 (CSV)", data=csv, file_name=f"{class_name}_lesson_plan.csv", mime='text/csv')
-    else:
-        st.error("모든 입력 필드를 채워주세요.")
+1. Clone this repository to your local machine:
+
+    ```bash
+    git clone https://github.com/yourusername/lesson-plan-generator.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd lesson-plan-generator
+    ```
+
+3. Install the required Python packages:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Running the App Locally
+
+To run the app on your local machine:
+
+1. Ensure you're in the root directory of the project.
+2. Run the Streamlit app using the following command:
+
+    ```bash
+    streamlit run src/app.py
+    ```
+
+    Replace `src/app.py` with the correct path to your main Python file if it's different.
+
+### Deploying the App on Streamlit Cloud
+
+1. Go to [Streamlit Cloud](https://streamlit.io/cloud) and log in.
+2. Select the option to deploy a new app.
+3. Provide the GitHub repository URL: `https://github.com/yourusername/lesson-plan-generator`
+4. Specify the main file path relative to the root of the repository. For example:
+
+    ```
+    src/app.py
+    ```
+
+    Adjust the file path according to the location of your main Python file.
+
+### Customization
+
+- You can modify the lesson plan logic in the main file (`src/app.py`) to suit different scheduling needs.
+- Update the list of holidays or off-days dynamically by editing the respective parts in the code.
+
+### Example Repository Structure
+
